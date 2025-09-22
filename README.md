@@ -50,7 +50,7 @@ cd 0xUnMineAbleMiner
 ```
 
 ```
-sudo bash 0xUnmineAble
+sudo bash Unmineable
 ```
 
 installation NC WALLET (DOMPET VIRTUAL)
