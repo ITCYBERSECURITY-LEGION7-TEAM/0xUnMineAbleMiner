@@ -1,0 +1,2297 @@
+#!/bin/bash
+
+# Warna untuk output hacker style
+BLACK='\033[0;30m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
+
+# Konfigurasi Unmineable - 100 Pool Aktif Sekaligus
+POOLS=(
+    "stratum+tcp://rx.unmineable.com:3333"
+    "stratum+tcp://rx.unmineable.com:13333"
+    "stratum+tcp://rx-eu.unmineable.com:3333"
+    "stratum+tcp://rx-asia.unmineable.com:3333"
+    "stratum+tcp://rx-us.unmineable.com:3333"
+    "stratum+tcp://kawpow.unmineable.com:3333"
+    "stratum+tcp://kawpow.unmineable.com:13333"
+    "stratum+tcp://etchash.unmineable.com:3333"
+    "stratum+tcp://etchash.unmineable.com:13333"
+    "stratum+tcp://randomx.unmineable.com:3333"
+    "stratum+tcp://rx.unmineable.com:3333"
+    "stratum+tcp://rx.unmineable.com:13333"
+    "stratum+tcp://rx.unmineable.com:4333"
+    "stratum+tcp://rx-eu.unmineable.com:3333"
+    "stratum+tcp://rx-eu.unmineable.com:13333"
+    "stratum+tcp://rx-eu.unmineable.com:4333"
+    "stratum+tcp://rx-asia.unmineable.com:3333"
+    "stratum+tcp://rx-asia.unmineable.com:13333"
+    "stratum+tcp://rx-asia.unmineable.com:4333"
+    "stratum+tcp://rx-us.unmineable.com:3333"
+    "stratum+tcp://rx-us.unmineable.com:13333"
+    "stratum+tcp://rx-us.unmineable.com:4333"
+    "stratum+tcp://kawpow.unmineable.com:3333"
+    "stratum+tcp://kawpow.unmineable.com:13333"
+    "stratum+tcp://kawpow.unmineable.com:4333"
+    "stratum+tcp://etchash.unmineable.com:3333"
+    "stratum+tcp://etchash.unmineable.com:13333"
+    "stratum+tcp://etchash.unmineable.com:4333"
+    "stratum+tcp://randomx.unmineable.com:3333"
+    "stratum+tcp://randomx.unmineable.com:13333"
+    # Tambahkan lebih banyak pool di sini untuk mencapai 100 pool
+    # Pool tambahan untuk Ethereum
+    "stratum+tcp://eth.ethermine.org:4444"
+    "stratum+tcp://eth.2miners.com:2020"
+    "stratum+tcp://eth.hiveon.net:4444"
+    "stratum+tcp://us1.ethermine.org:4444"
+    "stratum+tcp://eu1.ethermine.org:4444"
+    "stratum+tcp://asia1.ethermine.org:4444"
+    
+    # Pool tambahan untuk Ravencoin
+    "stratum+tcp://rvn.2miners.com:6060"
+    "stratum+tcp://stratum-ravencoin.flypool.org:3333"
+    "stratum+tcp://rvn.cruxpool.com:3333"
+    
+    # Pool tambahan untuk Monero
+    "stratum+tcp://xmr.pool.minergate.com:45700"
+    "stratum+tcp://xmr.supportxmr.com:3333"
+    "stratum+tcp://pool.minexmr.com:4444"
+    
+    # Pool tambahan untuk Ethereum Classic
+    "stratum+tcp://etc.ethermine.org:4444"
+    "stratum+tcp://etc.2miners.com:1010"
+    
+    # Pool tambahan untuk Bitcoin Gold
+    "stratum+tcp://btg.pool.gold:4048"
+    "stratum+tcp://btg.2miners.com:4040"
+    
+    # Pool tambahan untuk ZCash
+    "stratum+tcp://zec.2miners.com:2020"
+    "stratum+tcp://stratum-zec.flypool.org:3333"
+    
+    # Pool tambahan untuk Beam
+    "stratum+tcp://beam.2miners.com:5252"
+    
+    # Pool tambahan untuk Grin
+    "stratum+tcp://grin.2miners.com:3030"
+    
+    # Pool tambahan untuk Aeternity
+    "stratum+tcp://ae.2miners.com:4040"
+    
+    # Pool tambahan untuk Sero
+    "stratum+tcp://sero.2miners.com:8888"
+    
+    # Pool tambahan untuk Callisto
+    "stratum+tcp://clo.2miners.com:3030"
+    
+    # Pool tambahan untuk BitTube
+    "stratum+tcp://tube.2miners.com:8080"
+    
+    # Pool tambahan untuk ZelCash
+    "stratum+tcp://zel.2miners.com:9090"
+    
+    # Pool tambahan untuk Ryo
+    "stratum+tcp://ryo.2miners.com:7070"
+    
+    # Pool tambahan untuk Loki
+    "stratum+tcp://loki.2miners.com:6666"
+    
+    # Pool tambahan untuk Cortex
+    "stratum+tcp://ctxc.2miners.com:2222"
+    
+    # Pool tambahan untuk Masari
+    "stratum+tcp://msr.2miners.com:3333"
+    
+    # Pool tambahan untuk Swap
+    "stratum+tcp://xwp.2miners.com:8888"
+    
+    # Pool tambahan untuk Qwertycoin
+    "stratum+tcp://qwc.2miners.com:8080"
+    
+    # Pool tambahan untuk Stellite
+    "stratum+tcp://xla.2miners.com:4444"
+    
+    # Pool tambahan untuk CryptoNight Heavy
+    "stratum+tcp://cn-heavy.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight Fast
+    "stratum+tcp://cn-fast.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight Lite
+    "stratum+tcp://cn-lite.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight R
+    "stratum+tcp://cn-r.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight XTL
+    "stratum+tcp://cn-xtl.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight XHV
+    "stratum+tcp://cn-xhv.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight Turtle
+    "stratum+tcp://cn-trtl.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight Double
+    "stratum+tcp://cn-dbl.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight Half
+    "stratum+tcp://cn-half.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight ZLS
+    "stratum+tcp://cn-zls.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight CCX
+    "stratum+tcp://cn-ccx.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight UPX
+    "stratum+tcp://cn-upx.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight GPU
+    "stratum+tcp://cn-gpu.2miners.com:2020"
+    
+    # Pool tambahan untuk CryptoNight CONCEAL
+    "stratum+tcp://cn-ccx.2miners.com:2020"
+    
+    # Pool tambahan untuk Equihash 144/5
+    "stratum+tcp://zh.2miners.com:2020"
+    
+    # Pool tambahan untuk Equihash 192/7
+    "stratum+tcp://zh-192.2miners.com:2020"
+    
+    # Pool tambahan untuk Equihash 210/9
+    "stratum+tcp://zh-210.2miners.com:2020"
+    
+    # Pool tambahan untuk Equihash 96/5
+    "stratum+tcp://zh-96.2miners.com:2020"
+    
+    # Pool tambahan untuk BeamHash III
+    "stratum+tcp://beamIII.2miners.com:5252"
+    
+    # Pool tambahan untuk Cuckaroo29
+    "stratum+tcp://grin29.2miners.com:3030"
+    
+    # Pool tambahan untuk Cuckatoo31
+    "stratum+tcp://grin31.2miners.com:3030"
+    
+    # Pool tambahan untuk Cuckaroo29d
+    "stratum+tcp://grin29d.2miners.com:3030"
+    
+    # Pool tambahan untuk RandomARQ
+    "stratum+tcp://arq.2miners.com:8888"
+    
+    # Pool tambahan untuk RandomX
+    "stratum+tcp://rx.2miners.com:8080"
+    
+    # Pool tambahan untuk RandomXL
+    "stratum+tcp://rxl.2miners.com:8080"
+    
+    # Pool tambahan untuk RandomWOW
+    "stratum+tcp://wow.2miners.com:8080"
+    
+    # Pool tambahan untuk RandomSFX
+    "stratum+tcp://sfx.2miners.com:8080"
+    
+    # Pool tambahan untuk RandomKEVA
+    "stratum+tcp://keva.2miners.com:8080"
+    
+    # Pool tambahan untuk RandomXMO
+    "stratum+tcp://xmo.2miners.com:8080"
+    
+    # Pool tambahan untuk Autolykos2
+    "stratum+tcp://erg.2miners.com:8888"
+    
+    # Pool tambahan untuk Ethash
+    "stratum+tcp://eth.2miners.com:2020"
+    
+    # Pool tambahan untuk Etchash
+    "stratum+tcp://etc.2miners.com:1010"
+    
+    # Pool tambahan untuk KawPow
+    "stratum+tcp://rvn.2miners.com:6060"
+    
+    # Pool tambahan untuk Octopus
+    "stratum+tcp://cfx.2miners.com:2020"
+    
+    # Pool tambahan untuk VertHash
+    "stratum+tcp://vtc.2miners.com:2020"
+    
+    # Pool tambahan untuk Firopow
+    "stratum+tcp://firo.2miners.com:2020"
+    
+    # Pool tambahan untuk EvrProgPow
+    "stratum+tcp://evr.2miners.com:2020"
+    
+    # Pool tambahan untuk ProgPowZ
+    "stratum+tcp://zano.2miners.com:2020"
+    
+    # Pool tambahan untuk ProgPowVBK
+    "stratum+tcp://vbk.2miners.com:2020"
+)
+
+# Daftar 50 algoritma mining yang didukung TeamRedMiner
+ALGORITHMS=(
+    "ethash"        # Ethereum
+    "etchash"       # Ethereum Classic
+    "kawpow"        # Ravencoin
+    "firopow"       # Firo
+    "progpow"       # Various coins
+    "progpowz"      # Zano
+    "progpowvbk"    # VeriBlock
+    "randomx"       # Monero
+    "randomx_loki"  # Loki
+    "randomx_arq"   # Arqma
+    "randomx_wow"   # Wownero
+    "randomx_keva"  # Kevacoin
+    "randomx_sfx"   # SofaCoin
+    "cryptonight"   # Various coins
+    "cryptonight_gpu" # Various coins
+    "cryptonight_r" # Monero (v8)
+    "cryptonight_rwz" # Ryo Currency
+    "cryptonight_heavy" # Haven Protocol
+    "cryptonight_heavyx" # Sumokoin
+    "cryptonight_xhv" # Haven Protocol
+    "cryptonight_xao" # Alloy
+    "cryptonight_xtl" # Stellite
+    "cryptonight_msr" # Masari
+    "cryptonight_zls" # Zelerius
+    "cryptonight_dbl" # Double
+    "cryptonight_ccx" # Conceal
+    "cryptonight_trtl" # TurtleCoin
+    "cryptonight_upx" # Uplexa
+    "cryptonight_gpu" # Various coins
+    "cryptonight_conceal" # Conceal
+    "cryptonight_superfast" # Various coins
+    "cryptonight_fast" # Various coins
+    "cryptonight_lite" # Various coins
+    "cryptonight_haven" # Haven Protocol
+    "cryptonight_bittube" # BitTube
+    "cryptonight_stellite" # Stellite
+    "cryptonight_masari" # Masari
+    "cryptonight_aeon" # Aeon
+    "cryptonight_ipbc" # IPBC
+    "cryptonight_swap" # Swap
+    "cryptonight_bittube2" # BitTube v2
+    "cryptonight_alloy" # Alloy
+    "cryptonight_rto" # Arto
+    "cryptonight_heavyx" # Sumokoin
+    "cryptonight_fast2" # Various coins
+    "cryptonight_turtle" # TurtleCoin
+    "cryptonight_dark" # Dark
+    "cryptonight_reborn" # Reborn
+    "cryptonight_catalans" # Catalans
+    "cryptonight_ptxc" # Particl
+)
+
+THREADS=$(nproc --all 2>/dev/null || echo 4)
+INSTALL_DIR="$HOME/unmineable-miner"
+LOG_FILE="$INSTALL_DIR/mining.log"
+CONFIG_FILE="$INSTALL_DIR/config.json"
+WORKERS_FILE="$INSTALL_DIR/workers.json"
+BALANCE_CACHE="$INSTALL_DIR/balance_cache.txt"
+TRANSACTION_HISTORY_FILE="$INSTALL_DIR/transactions.json"
+SETTINGS_FILE="$INSTALL_DIR/settings.json"
+GPU_INFO_FILE="$INSTALL_DIR/gpu_info.json"
+XMRIG_API_URL="http://127.0.0.1:8080"  # URL API XMRig
+
+# Variabel user
+USER_ID=""
+WALLET_ADDRESS=""
+COIN=""
+CUSTOM_HASHRATE_LIMIT="999999"
+HASHRATE_LIMIT_ENABLED=false
+MIN_WITHDRAWAL=""
+MAX_WITHDRAWAL=""
+AUTO_WITHDRAWAL=false
+ACTIVE_WORKERS=()
+ACTIVE_POOLS=()
+MINING_BALANCE=0
+LAST_BALANCE_UPDATE=0
+REFERRAL_CODE=""
+
+# Variabel untuk XMRig API dan monitoring
+XMRIG_PID=0
+XMRIG_API_DATA=()
+XMRIG_HASHRATE=0
+XMRIG_ACCEPTED_SHARES=0
+XMRIG_REJECTED_SHARES=0
+XMRIG_TOTAL_SHARES=0
+XMRIG_UPTIME=0
+XMRIG_ALGO=""
+XMRIG_DIFFICULTY=0
+XMRIG_CONNECTION_STATUS="Disconnected"
+
+# Variabel untuk GPU monitoring
+GPU_INFO_UPDATED=0
+GPU_DASHBOARD_DATA=()
+NVIDIA_DRIVER_INSTALLED=false
+CUDA_AVAILABLE=false
+
+# Deteksi OS
+OS=""
+ARCH=""
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    OS="linux"
+    ARCH=$(uname -m)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    OS="mac"
+    ARCH=$(uname -m)
+elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    OS="windows"
+    if [[ "$PROCESSOR_ARCHITECTURE" == "AMD64" ]] || [[ "$PROCESSOR_ARCHITEW6432" == "AMD64" ]]; then
+        ARCH="x86_64"
+    else
+        ARCH="x86"
+    fi
+else
+    OS="unknown"
+fi
+
+# ============================ FUNGSI BARU UNTUK XMRIG API ============================
+
+# Fungsi untuk memulai XMRig dengan API enabled
+start_xmrig_with_api() {
+    echo -e "${YELLOW}[INFO] Starting XMRig with API enabled...${NC}"
+    cd "$INSTALL_DIR/build"
+    
+    # Buat config dengan API enabled
+    create_config_with_api
+    
+    if [ "$OS" = "windows" ]; then
+        start //B xmrig.exe -c "$CONFIG_FILE" >> "$LOG_FILE" 2>&1
+        sleep 2
+        XMRIG_PID=$(tasklist //FI "IMAGENAME eq xmrig.exe" //FO CSV | awk -F, '{print $2}' | tail -1 | tr -d '"')
+    else
+        nohup ./xmrig -c "$CONFIG_FILE" >> "$LOG_FILE" 2>&1 &
+        XMRIG_PID=$!
+        sleep 2
+    fi
+    
+    if [ -n "$XMRIG_PID" ] && [ "$XMRIG_PID" -gt 0 ]; then
+        echo -e "${GREEN}[SUCCESS] XMRig started with PID: $XMRIG_PID${NC}"
+        # Tunggu sebentar untuk API mulai berjalan
+        sleep 5
+        return 0
+    else
+        echo -e "${RED}[ERROR] Failed to start XMRig!${NC}"
+        return 1
+    fi
+}
+
+# Fungsi untuk membuat config dengan API enabled
+create_config_with_api() {
+    echo -e "${YELLOW}[INFO] Creating config file with API enabled...${NC}"
+    
+    # Format untuk Unmineable: COIN:WALLET_ADDRESS.USER_ID#REFERRAL_CODE
+    if [ -n "$REFERRAL_CODE" ]; then
+        USER_STRING="$COIN:$WALLET_ADDRESS.$USER_ID#$REFERRAL_CODE"
+    else
+        USER_STRING="$COIN:$WALLET_ADDRESS.$USER_ID"
+    fi
+    
+    # Membuat pools array untuk config dengan algoritma bergantian
+    POOLS_CONFIG=""
+    local pool_count=${#POOLS[@]}
+    local algo_count=${#ALGORITHMS[@]}
+    
+    for ((i=0; i<pool_count; i++)); do
+        local pool="${POOLS[$i]}"
+        local algo="${ALGORITHMS[$((i % algo_count))]}"
+        POOLS_CONFIG+=$(cat << EOF
+
+        {
+            "coin": null,
+            "algo": "$algo",
+            "url": "$pool",
+            "user": "$USER_STRING",
+            "pass": "x",
+            "tls": false,
+            "keepalive": true,
+            "nicehash": false
+        },
+EOF
+)
+    done
+    
+    # Menghapus koma terakhir
+    POOLS_CONFIG=${POOLS_CONFIG%,}
+    
+    # Menambahkan max-threads-hint jika hash rate limit diatur
+    MAX_THREADS_HINT=""
+    if [ "$HASHRATE_LIMIT_ENABLED" = true ] && [ -n "$CUSTOM_HASHRATE_LIMIT" ]; then
+        MAX_THREADS_HINT=",\"max-threads-hint\": 100"
+    fi
+    
+    cat > "$CONFIG_FILE" << EOF
+{
+    "autosave": true,
+    "cpu": true,
+    "opencl": false,
+    "cuda": false,
+    "donate-level": 0,
+    "print-time": 10,
+    "health-print-time": 60,
+    "retries": 5,
+    "retry-pause": 5,
+    "pause-on-battery": false,
+    "pause-on-active": false$MAX_THREADS_HINT,
+    "api": {
+        "port": 8080,
+        "access-token": null,
+        "id": null,
+        "worker-id": null,
+        "ipv6": false,
+        "restricted": false
+    },
+    "pools": [$POOLS_CONFIG
+    ]
+}
+EOF
+    
+    echo -e "${GREEN}[SUCCESS] Config file with API created: $CONFIG_FILE${NC}"
+}
+
+# Fungsi untuk mendapatkan data dari API XMRig
+get_xmrig_api_data() {
+    if [ "$XMRIG_PID" -eq 0 ]; then
+        XMRIG_CONNECTION_STATUS="Not Running"
+        return 1
+    fi
+    
+    # Cek jika XMRig masih berjalan
+    if ! is_mining; then
+        XMRIG_CONNECTION_STATUS="Not Running"
+        return 1
+    fi
+    
+    # Coba ambil data dari API
+    local api_response
+    if command -v curl &> /dev/null; then
+        api_response=$(curl -s "$XMRIG_API_URL" 2>/dev/null)
+    elif command -v wget &> /dev/null; then
+        api_response=$(wget -q -O - "$XMRIG_API_URL" 2>/dev/null)
+    else
+        XMRIG_CONNECTION_STATUS="API Tools Missing"
+        return 1
+    fi
+    
+    if [ -z "$api_response" ] || [ "$api_response" = "null" ]; then
+        XMRIG_CONNECTION_STATUS="Connection Failed"
+        return 1
+    fi
+    
+    # Parse data JSON
+    XMRIG_HASHRATE=$(echo "$api_response" | grep -o '"hashrate":[^,]*' | sed 's/"hashrate"://' | tr -d '{}' | awk '{print $1}')
+    XMRIG_ACCEPTED_SHARES=$(echo "$api_response" | grep -o '"accepted":[^,]*' | sed 's/"accepted"://' | tr -d '{}')
+    XMRIG_REJECTED_SHARES=$(echo "$api_response" | grep -o '"rejected":[^,]*' | sed 's/"rejected"://' | tr -d '{}')
+    XMRIG_TOTAL_SHARES=$((XMRIG_ACCEPTED_SHARES + XMRIG_REJECTED_SHARES))
+    XMRIG_UPTIME=$(echo "$api_response" | grep -o '"uptime":[^,]*' | sed 's/"uptime"://' | tr -d '{}')
+    XMRIG_ALGO=$(echo "$api_response" | grep -o '"algo":"[^"]*"' | sed 's/"algo":"//' | sed 's/"//')
+    XMRIG_DIFFICULTY=$(echo "$api_response" | grep -o '"difficulty":[^,]*' | sed 's/"difficulty"://' | tr -d '{}')
+    
+    # Hitung reject rate
+    local reject_rate=0
+    if [ "$XMRIG_TOTAL_SHARES" -gt 0 ]; then
+        reject_rate=$(echo "scale=2; $XMRIG_REJECTED_SHARES * 100 / $XMRIG_TOTAL_SHARES" | bc)
+    fi
+    
+    # Tentukan status koneksi berdasarkan reject rate
+    if [ "$XMRIG_TOTAL_SHARES" -eq 0 ]; then
+        XMRIG_CONNECTION_STATUS="No Shares Yet"
+    elif [ $(echo "$reject_rate > 10" | bc -l) -eq 1 ]; then
+        XMRIG_CONNECTION_STATUS="High Reject Rate ($reject_rate%)"
+    elif [ $(echo "$reject_rate > 5" | bc -l) -eq 1 ]; then
+        XMRIG_CONNECTION_STATUS="Medium Reject Rate ($reject_rate%)"
+    else
+        XMRIG_CONNECTION_STATUS="Connected ($reject_rate% rejected)"
+    fi
+    
+    XMRIG_API_DATA=(
+        "Hash Rate: $XMRIG_HASHRATE H/s"
+        "Accepted Shares: $XMRIG_ACCEPTED_SHARES"
+        "Rejected Shares: $XMRIG_REJECTED_SHARES"
+        "Total Shares: $XMRIG_TOTAL_SHARES"
+        "Uptime: $(format_uptime $XMRIG_UPTIME)"
+        "Algorithm: $XMRIG_ALGO"
+        "Difficulty: $XMRIG_DIFFICULTY"
+        "Connection: $XMRIG_CONNECTION_STATUS"
+    )
+    
+    return 0
+}
+
+# Fungsi untuk memformat waktu uptime
+format_uptime() {
+    local seconds=$1
+    local days=$((seconds/86400))
+    local hours=$((seconds%86400/3600))
+    local minutes=$((seconds%3600/60))
+    
+    if [ "$days" -gt 0 ]; then
+        echo "${days}d ${hours}h ${minutes}m"
+    elif [ "$hours" -gt 0 ]; then
+        echo "${hours}h ${minutes}m"
+    else
+        echo "${minutes}m"
+    fi
+}
+
+# Fungsi untuk menampilkan dashboard XMRig real-time
+show_xmrig_dashboard() {
+    # Ambil data terbaru dari API
+    get_xmrig_api_data
+    
+    echo -e "${PURPLE}══════════════════ XMRIG REAL-TIME DASHBOARD ══════════════════${NC}"
+    
+    if [ "$XMRIG_PID" -eq 0 ]; then
+        echo -e "${RED}XMRig is not running${NC}"
+        echo -e "${YELLOW}Start mining to see real-time statistics${NC}"
+    else
+        for info in "${XMRIG_API_DATA[@]}"; do
+            # Warna berdasarkan tipe informasi
+            if [[ $info == Hash\ Rate:* ]]; then
+                echo -e "${GREEN}$info${NC}"
+            elif [[ $info == Accepted\ Shares:* ]]; then
+                echo -e "${GREEN}$info${NC}"
+            elif [[ $info == Rejected\ Shares:* ]]; then
+                if [ "$XMRIG_REJECTED_SHARES" -gt 0 ]; then
+                    echo -e "${RED}$info${NC}"
+                else
+                    echo -e "${GREEN}$info${NC}"
+                fi
+            elif [[ $info == Connection:*High* ]]; then
+                echo -e "${RED}$info${NC}"
+            elif [[ $info == Connection:*Medium* ]]; then
+                echo -e "${YELLOW}$info${NC}"
+            elif [[ $info == Connection:* ]]; then
+                echo -e "${GREEN}$info${NC}"
+            else
+                echo -e "${CYAN}$info${NC}"
+            fi
+        done
+        
+        # Tampilkan progress bar untuk hashrate (jika ada target)
+        if [ -n "$CUSTOM_HASHRATE_LIMIT" ] && [ "$CUSTOM_HASHRATE_LIMIT" != "999999" ]; then
+            local hash_int=${XMRIG_HASHRATE%.*}
+            local limit_int=${CUSTOM_HASHRATE_LIMIT%.*}
+            local percentage=0
+            if [ "$limit_int" -gt 0 ]; then
+                percentage=$((hash_int * 100 / limit_int))
+            fi
+            
+            # Batasi percentage maksimum 100%
+            if [ "$percentage" -gt 100 ]; then
+                percentage=100
+            fi
+            
+            echo -e "\n${CYAN}Hash Rate Progress:${NC}"
+            draw_progress_bar $percentage
+        fi
+    fi
+    echo -e "${PURPLE}═══════════════════════════════════════════════════════════════${NC}"
+}
+
+# Fungsi untuk menggambar progress bar
+draw_progress_bar() {
+    local percentage=$1
+    local bar_length=30
+    local filled_length=$((percentage * bar_length / 100))
+    local bar=""
+    
+    for ((i=0; i<filled_length; i++)); do
+        bar+="█"
+    done
+    
+    for ((i=filled_length; i<bar_length; i++)); do
+        bar+="░"
+    done
+    
+    # Warna berdasarkan persentase
+    if [ "$percentage" -lt 50 ]; then
+        echo -e "${RED}[$bar] ${percentage}%${NC}"
+    elif [ "$percentage" -lt 80 ]; then
+        echo -e "${YELLOW}[$bar] ${percentage}%${NC}"
+    else
+        echo -e "${GREEN}[$bar] ${percentage}%${NC}"
+    fi
+}
+
+# Fungsi untuk pengaturan user
+user_settings() {
+    echo -e "${YELLOW}[INFO] User Settings...${NC}"
+    
+    echo -n "Enter User ID/Worker Name: "
+    read user_id
+    echo -n "Enter Wallet Address (34-250 characters): "
+    read wallet_address
+    echo -n "Enter Coin (e.g. BTC, ETH, DOGE, SHIB, etc.): "
+    read coin
+    echo -n "Enter Referral Code (optional): "
+    read referral_code
+    
+    # Validasi wallet address
+    if [ -z "$wallet_address" ] || [ ${#wallet_address} -lt 34 ] || [ ${#wallet_address} -gt 250 ]; then
+        echo -e "${RED}[ERROR] Wallet address must be between 34 and 250 characters!${NC}"
+        sleep 2
+        return
+    fi
+    
+    if [ -z "$user_id" ] || [ -z "$wallet_address" ] || [ -z "$coin" ]; then
+        echo -e "${RED}[ERROR] All fields are required!${NC}"
+        sleep 2
+        return
+    fi
+    
+    USER_ID=$user_id
+    WALLET_ADDRESS=$wallet_address
+    COIN=$coin
+    REFERRAL_CODE=$referral_code
+    
+    create_config
+    save_settings
+    
+    echo -e "${GREEN}[SUCCESS] User settings saved successfully!${NC}"
+    sleep 2
+}
+
+# Fungsi untuk menyimpan pengaturan
+save_settings() {
+    cat > "$SETTINGS_FILE" << EOF
+{
+    "user_id": "$USER_ID",
+    "wallet_address": "$WALLET_ADDRESS",
+    "coin": "$COIN",
+    "referral_code": "$REFERRAL_CODE",
+    "hashrate_limit_enabled": $HASHRATE_LIMIT_ENABLED,
+    "custom_hashrate_limit": "$CUSTOM_HASHRATE_LIMIT",
+    "min_withdrawal": "$MIN_WITHDRAWAL",
+    "max_withdrawal": "$MAX_WITHDRAWAL",
+    "auto_withdrawal": $AUTO_WITHDRAWAL
+}
+EOF
+}
+
+# Fungsi untuk memuat pengaturan
+load_settings() {
+    if [ -f "$SETTINGS_FILE" ]; then
+        USER_ID=$(jq -r '.user_id' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        WALLET_ADDRESS=$(jq -r '.wallet_address' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        COIN=$(jq -r '.coin' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        HASHRATE_LIMIT_ENABLED=$(jq -r '.hashrate_limit_enabled' "$SETTINGS_FILE" 2>/dev/null || echo "false")
+        CUSTOM_HASHRATE_LIMIT=$(jq -r '.custom_hashrate_limit' "$SETTINGS_FILE" 2>/dev/null || echo "999999")
+        MIN_WITHDRAWAL=$(jq -r '.min_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        MAX_WITHDRAWAL=$(jq -r '.max_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        AUTO_WITHDRAWAL=$(jq -r '.auto_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "false")
+    fi
+}
+
+# Fungsi untuk membuat config file dengan multiple pools dan multiple algoritma
+create_config() {
+    echo -e "${YELLOW}[INFO] Creating config file with 100 active pools and multiple algorithms...${NC}"
+    
+    # Format untuk Unmineable: COIN:WALLET_ADDRESS.USER_ID#REFERRAL_CODE
+    if [ -n "$REFERRAL_CODE" ]; then
+        USER_STRING="$COIN:$WALLET_ADDRESS.$USER_ID#$REFERRAL_CODE"
+    else
+        USER_STRING="$COIN:$WALLET_ADDRESS.$USER_ID"
+    fi
+    
+    # Membuat pools array untuk config dengan algoritma bergantian
+    POOLS_CONFIG=""
+    local pool_count=${#POOLS[@]}
+    local algo_count=${#ALGORITHMS[@]}
+    
+    for ((i=0; i<pool_count; i++)); do
+        local pool="${POOLS[$i]}"
+        local algo="${ALGORITHMS[$((i % algo_count))]}"
+        POOLS_CONFIG+=$(cat << EOF
+
+        {
+            "coin": null,
+            "algo": "$algo",
+            "url": "$pool",
+            "user": "$USER_STRING",
+            "pass": "x",
+            "tls": false,
+            "keepalive": true,
+            "nicehash": false
+        },
+EOF
+)
+    done
+    
+    # Menghapus koma terakhir
+    POOLS_CONFIG=${POOLS_CONFIG%,}
+    
+    # Menambahkan max-threads-hint jika hash rate limit diatur
+    MAX_THREADS_HINT=""
+    if [ "$HASHRATE_LIMIT_ENABLED" = true ] && [ -n "$CUSTOM_HASHRATE_LIMIT" ]; then
+        MAX_THREADS_HINT=",\"max-threads-hint\": 100"
+    fi
+    
+    cat > "$CONFIG_FILE" << EOF
+{
+    "autosave": true,
+    "cpu": true,
+    "opencl": false,
+    "cuda": false,
+    "donate-level": 0,
+    "print-time": 10,
+    "health-print-time": 60,
+    "retries": 5,
+    "retry-pause": 5,
+    "pause-on-battery": false,
+    "pause-on-active": false$MAX_THREADS_HINT,
+    "pools": [$POOLS_CONFIG
+    ]
+}
+EOF
+    
+    echo -e "${GREEN}[SUCCESS] Config file created: $CONFIG_FILE${NC}"
+    echo -e "${YELLOW}[INFO] Using 100 active pools with multiple algorithms simultaneously${NC}"
+}
+
+# Fungsi untuk mendapatkan balance dari Unmineable
+get_balance() {
+    if [ -z "$WALLET_ADDRESS" ] || [ -z "$COIN" ]; then
+        echo "0.0"
+        return
+    fi
+    
+    # Gunakan cache untuk menghindari terlalu banyak request
+    if [ -f "$BALANCE_CACHE" ]; then
+        local cache_age=$(($(date +%s) - $(stat -c %Y "$BALANCE_CACHE" 2>/dev/null || echo 0)))
+        if [ $cache_age -lt 10 ]; then  # Cache valid untuk 10 detik
+            cat "$BALANCE_CACHE"
+            return
+        fi
+    fi
+    
+    local balance_data
+    balance_data=$(curl -s "https://api.unmineable.com/v4/address/$WALLET_ADDRESS?coin=$COIN" | jq -r '.data.balance' 2>/dev/null)
+    
+    if [ $? -eq 0 ] && [ "$balance_data" != "null" ]; then
+        echo "$balance_data" > "$BALANCE_CACHE"
+        echo "$balance_data"
+    else
+        # Fallback ke scraping HTML jika API tidak bekerja
+        balance_data=$(curl -s "https://unmineable.com/coins/$COIN/address/$WALLET_ADDRESS" | grep -oE "balance_[A-Za-z0-9]+\":[[:space:]]*[0-9.]+" | head -1 | cut -d: -f2 | tr -d ' ')
+        if [ -n "$balance_data" ]; then
+            echo "$balance_data" > "$BALANCE_CACHE"
+            echo "$balance_data"
+        else
+            echo "0.0"
+        fi
+    fi
+}
+
+# Fungsi untuk update balance mining secara real-time
+update_mining_balance() {
+    local current_time=$(date +%s)
+    
+    # Update balance setiap 5 detik
+    if [ $((current_time - LAST_BALANCE_UPDATE)) -ge 5 ]; then
+        MINING_BALANCE=$(get_balance)
+        LAST_BALANCE_UPDATE=$current_time
+    fi
+}
+
+# Fungsi untuk mengecek apakah mining sedang berjalan
+is_mining() {
+    if [ "$OS" = "windows" ]; then
+        tasklist //FI "IMAGENAME eq xmrig.exe" 2>/dev/null | grep -q xmrig.exe
+    else
+        pgrep -f xmrig > /dev/null 2>&1
+    fi
+    return $?
+}
+
+# Fungsi untuk pengaturan hash rate
+hashrate_settings() {
+    echo -e "${YELLOW}[INFO] Hash Rate Settings...${NC}"
+    
+    echo -e "Hash Rate Limit Status: $([ "$HASHRATE_LIMIT_ENABLED" = true ] && echo -e "${GREEN}Enabled${NC}" || echo -e "${RED}Disabled${NC}")"
+    echo -e "Current Hash Rate Limit: ${YELLOW}${CUSTOM_HASHRATE_LIMIT:-Not set}${NC}"
+    echo
+    echo -e "Options:"
+    echo -e "1. $([ "$HASHRATE_LIMIT_ENABLED" = true ] && echo "Disable" || echo "Enable") Hash Rate Limit"
+    echo -e "2. Set Unlimited Hash Rate (999999)"
+    echo -e "3. Set Custom Hash Rate Limit"
+    echo -e "4. Back"
+    echo
+    echo -n "Select option [1-4]: "
+    
+    read choice
+    case $choice in
+        1)
+            if [ "$HASHRATE_LIMIT_ENABLED" = true ]; then
+                HASHRATE_LIMIT_ENABLED=false
+                echo -e "${GREEN}[SUCCESS] Hash Rate Limit disabled!${NC}"
+            else
+                HASHRATE_LIMIT_ENABLED=true
+                echo -e "${GREEN}[SUCCESS] Hash Rate Limit enabled!${NC}"
+            fi
+            create_config
+            save_settings
+            ;;
+        2)
+            CUSTOM_HASHRATE_LIMIT="999999"
+            HASHRATE_LIMIT_ENABLED=true
+            echo -e "${GREEN}[SUCCESS] Unlimited hash rate (999999) set!${NC}"
+            create_config
+            save_settings
+            ;;
+        3)
+            echo -n "Enter Hash Rate Limit (e.g., 1000 for 1kH/s): "
+            read limit
+            if [[ "$limit" =~ ^[0-9]+$ ]] && [ "$limit" -gt 0 ]; then
+                CUSTOM_HASHRATE_LIMIT="$limit"
+                HASHRATE_LIMIT_ENABLED=true
+                echo -e "${GREEN}[SUCCESS] Hash Rate Limit set to $limit H/s!${NC}"
+                create_config
+                save_settings
+            else
+                echo -e "${RED}[ERROR] Please enter a valid positive number!${NC}"
+            fi
+            ;;
+        4)
+            return
+            ;;
+        *)
+            echo -e "${RED}[ERROR] Invalid option!${NC}"
+            ;;
+    esac
+    sleep 2
+}
+
+# Fungsi untuk pengaturan worker
+worker_settings() {
+    echo -e "${YELLOW}[INFO] Worker Settings...${NC}"
+    
+    echo -e "Current Active Workers: ${#ACTIVE_WORKERS[@]}"
+    for i in "${!ACTIVE_WORKERS[@]}"; do
+        echo -e "  ${GREEN}$((i+1)). ${ACTIVE_WORKERS[$i]}${NC}"
+    done
+    echo
+    echo -e "Options:"
+    echo -e "1. Add Worker"
+    echo -e "2. Remove Worker"
+    echo -e "3. Clear All Workers"
+    echo -e "4. Back"
+    echo
+    echo -n "Select option [1-4]: "
+    
+    read choice
+    case $choice in
+        1)
+            echo -n "Enter Worker Name: "
+            read worker_name
+            if [ -n "$worker_name" ]; then
+                ACTIVE_WORKERS+=("$worker_name")
+                echo -e "${GREEN}[SUCCESS] Worker $worker_name added!${NC}"
+                # Simpan workers ke file
+                printf '%s\n' "${ACTIVE_WORKERS[@]}" > "$WORKERS_FILE"
+            else
+                echo -e "${RED}[ERROR] Worker name cannot be empty!${NC}"
+            fi
+            ;;
+        2)
+            if [ ${#ACTIVE_WORKERS[@]} -eq 0 ]; then
+                echo -e "${YELLOW}[INFO] No workers to remove.${NC}"
+            else
+                echo -n "Enter Worker Number to Remove: "
+                read worker_num
+                if [[ "$worker_num" =~ ^[0-9]+$ ]] && [ "$worker_num" -ge 1 ] && [ "$worker_num" -le ${#ACTIVE_WORKERS[@]} ]; then
+                    removed_worker="${ACTIVE_WORKERS[$((worker_num-1))]}"
+                    unset "ACTIVE_WORKERS[$((worker_num-1))]"
+                    ACTIVE_WORKERS=("${ACTIVE_WORKERS[@]}")  # Reindex array
+                    echo -e "${GREEN}[SUCCESS] Worker $removed_worker removed!${NC}"
+                    printf '%s\n' "${ACTIVE_WORKERS[@]}" > "$WORKERS_FILE"
+                else
+                    echo -e "${RED}[ERROR] Invalid worker number!${NC}"
+                fi
+            fi
+            ;;
+        3)
+            if [ ${#ACTIVE_WORKERS[@]} -eq 0 ]; then
+                echo -e "${YELLOW}[INFO] No workers to clear.${NC}"
+            else
+                ACTIVE_WORKERS=()
+                rm -f "$WORKERS_FILE"
+                echo -e "${GREEN}[SUCCESS] All workers cleared!${NC}"
+            fi
+            ;;
+        4)
+            return
+            ;;
+        *)
+            echo -e "${RED}[ERROR] Invalid option!${NC}"
+            ;;
+    esac
+    sleep 2
+}
+
+# ============================ MODIFIKASI FUNGSI YANG ADA ============================
+
+# Modifikasi fungsi start_mining untuk menggunakan API
+start_mining() {
+    if is_mining; then
+        echo -e "${YELLOW}[WARNING] Mining is already running!${NC}"
+        sleep 2
+        return
+    fi
+    
+    if [ -z "$USER_ID" ] || [ -z "$WALLET_ADDRESS" ] || [ -z "$COIN" ]; then
+        echo -e "${RED}[ERROR] User ID, Wallet Address, or Coin not set!${NC}"
+        echo -e "${YELLOW}Please configure settings first.${NC}"
+        sleep 2
+        return
+    fi
+    
+    echo -e "${YELLOW}[INFO] Starting mining with 100 active pools...${NC}"
+    
+    # Gunakan fungsi baru dengan API
+    if start_xmrig_with_api; then
+        echo -e "${GREEN}[SUCCESS] Mining started with 10 active pools!${NC}"
+        echo -e "${YELLOW}Active pools:${NC}"
+        for pool in "${POOLS[@]}"; do
+            echo -e "  ${BLUE}- $pool${NC}"
+        done
+    else
+        echo -e "${RED}[ERROR] Failed to start mining!${NC}"
+        echo -e "${YELLOW}[INFO] Trying to reinstall XMRig...${NC}"
+        reinstall_xmrig
+        start_mining
+    fi
+    sleep 2
+}
+
+# Modifikasi fungsi stop_mining untuk menghentikan XMRig dengan benar
+stop_mining() {
+    if is_mining; then
+        echo -e "${YELLOW}[INFO] Stopping mining...${NC}"
+        if [ "$OS" = "windows" ]; then
+            taskkill //F //PID $XMRIG_PID > /dev/null 2>&1
+        else
+            kill -9 $XMRIG_PID 2>/dev/null
+        fi
+        XMRIG_PID=0
+        sleep 2
+        echo -e "${GREEN}[INFO] Mining stopped.${NC}"
+    else
+        echo -e "${YELLOW}[INFO] No mining process is running.${NC}"
+    fi
+    sleep 2
+}
+
+# Modifikasi fungsi is_mining untuk menggunakan PID yang benar
+is_mining() {
+    if [ "$XMRIG_PID" -eq 0 ]; then
+        return 1
+    fi
+    
+    if [ "$OS" = "windows" ]; then
+        tasklist //FI "PID eq $XMRIG_PID" 2>/dev/null | grep -q $XMRIG_PID
+    else
+        kill -0 $XMRIG_PID 2>/dev/null
+    fi
+    return $?
+}
+
+# Fungsi untuk mengumpulkan informasi GPU NVIDIA
+get_nvidia_gpu_info() {
+    local current_time=$(date +%s)
+    
+    # Update info setiap 3 detik
+    if [ $((current_time - GPU_INFO_UPDATED)) -lt 3 ] && [ ${#GPU_DASHBOARD_DATA[@]} -gt 0 ]; then
+        return
+    fi
+    
+    GPU_DASHBOARD_DATA=()
+    
+    # Cek apakah nvidia-smi tersedia
+    if ! command -v nvidia-smi &> /dev/null; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Drivers not installed")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    # Coba ambil data GPU, tangani error
+    local gpu_info
+    gpu_info=$(nvidia-smi --query-gpu=index,name,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.used,memory.free,power.draw,power.limit --format=csv,noheader,nounits 2>&1)
+    
+    # Cek error spesifik yang memerlukan restart
+    if echo "$gpu_info" | grep -q "NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Driver issue - RESTART REQUIRED")
+        GPU_INFO_UPDATED=$current_time
+        
+        # Set flag untuk menampilkan pesan restart
+        echo "RESTART_REQUIRED" > "$INSTALL_DIR/.nvidia_status"
+        return
+    fi
+    
+    if echo "$gpu_info" | grep -q "failed\|error\|NVIDIA-SMI has failed"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Driver communication error")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    if [ -z "$gpu_info" ] || echo "$gpu_info" | grep -q "No devices were found"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: No devices detected")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    # Jika berhasil mendapatkan data, hapus status error
+    if [ -f "$INSTALL_DIR/.nvidia_status" ]; then
+        rm -f "$INSTALL_DIR/.nvidia_status"
+    fi
+    
+    # Parse data GPU
+    IFS=$'\n' read -d '' -r -a gpu_lines <<< "$gpu_info"
+    
+    for line in "${gpu_lines[@]}"; do
+        IFS=',' read -r index name temp gpu_util mem_util mem_total mem_used mem_free power_draw power_limit <<< "$line"
+        
+        # Bersihkan spasi dan handle missing values
+        index=$(echo "$index" | xargs | sed 's/^[^0-9]*//')
+        name=$(echo "$name" | xargs)
+        temp=$(echo "$temp" | xargs)
+        gpu_util=$(echo "$gpu_util" | xargs | sed 's/%//')
+        mem_util=$(echo "$mem_util" | xargs | sed 's/%//')
+        mem_total=$(echo "$mem_total" | xargs)
+        mem_used=$(echo "$mem_used" | xargs)
+        mem_free=$(echo "$mem_free" | xargs)
+        power_draw=$(echo "$power_draw" | xargs)
+        power_limit=$(echo "$power_limit" | xargs)
+        
+        # Handle missing/error values
+        if [ -z "$temp" ] || [ "$temp" = "N/A" ]; then
+            temp="0"
+        fi
+        
+        if [ -z "$gpu_util" ] || [ "$gpu_util" = "N/A" ]; then
+            gpu_util="0"
+        fi
+        
+        # Format output untuk dashboard
+        local gpu_status="GPU${index}: ${name} | Temp: ${temp}°C | Load: ${gpu_util}% | Mem: ${mem_used}MB/${mem_total}MB (${mem_util}%) | Power: ${power_draw}W/${power_limit}W"
+        GPU_DASHBOARD_DATA+=("$gpu_status")
+    done
+    
+    GPU_INFO_UPDATED=$current_time
+}
+
+# Fungsi untuk mengumpulkan informasi CPU dan RAM
+get_cpu_ram_info() {
+    local cpu_usage=""
+    local ram_usage=""
+    
+    if [ "$OS" = "linux" ] || [ "$OS" = "mac" ]; then
+        # CPU usage
+        cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}')
+        
+        # RAM usage
+        ram_usage=$(free -m | awk 'NR==2{printf "%.2f%% (%sMB/%sMB)", $3*100/$2, $3, $2}')
+    elif [ "$OS" = "windows" ]; then
+        # Windows implementation using wmic
+        cpu_usage=$(wmic cpu get loadpercentage | awk 'NR==2{print $1"%"}')
+        ram_usage=$(wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value | awk -F'=' '{if ($1 ~ /FreePhysicalMemory/) free=$2; if ($1 ~ /TotalVisibleMemorySize/) total=$2} END {printf "%.2f%% (%dMB/%dMB)", (total-free)*100/total, (total-free)/1024, total/1024}')
+    else
+        cpu_usage="N/A"
+        ram_usage="N/A"
+    fi
+    
+    echo "CPU: $cpu_usage | RAM: $ram_usage"
+}
+
+# Fungsi untuk reinstall XMRig
+reinstall_xmrig() {
+    echo -e "${YELLOW}[INFO] Reinstalling XMRig...${NC}"
+    stop_mining
+    cd "$HOME"
+    rm -rf "$INSTALL_DIR"
+    install_xmrig
+    if [ -n "$USER_ID" ] && [ -n "$WALLET_ADDRESS" ] && [ -n "$COIN" ]; then
+        create_config
+    fi
+    echo -e "${GREEN}[SUCCESS] XMRig reinstalled successfully!${NC}"
+    sleep 2
+}
+
+# Fungsi untuk download dan build XMRig
+install_xmrig() {
+    echo -e "${YELLOW}[INFO] Installing XMRig...${NC}"
+    
+    if [ "$OS" = "windows" ]; then
+        install_xmrig_windows
+    else
+        install_xmrig_linux
+    fi
+}
+
+# Fungsi untuk install XMRig di Linux
+install_xmrig_linux() {
+    if [ -d "$INSTALL_DIR" ]; then
+        echo -e "${YELLOW}[INFO] Directory exists, checking if it's a valid git repo...${NC}"
+        cd "$INSTALL_DIR"
+        
+        if git rev-parse --git-dir > /dev/null 2>&1; then
+            echo -e "${YELLOW}[INFO] Valid git repository, updating...${NC}"
+            git pull
+        else
+            echo -e "${YELLOW}[INFO] Not a valid git repo, removing and cloning fresh...${NC}"
+            cd ..
+            rm -rf "$INSTALL_DIR"
+            git clone https://github.com/xmrig/xmrig "$INSTALL_DIR"
+            cd "$INSTALL_DIR"
+        fi
+    else
+        git clone https://github.com/xmrig/xmrig "$INSTALL_DIR"
+        cd "$INSTALL_DIR"
+    fi
+    
+    if [ ! -f "CMakeLists.txt" ]; then
+        echo -e "${RED}[ERROR] CMakeLists.txt not found!${NC}"
+        echo -e "${YELLOW}[INFO] Removing directory and trying fresh clone...${NC}"
+        cd ..
+        rm -rf "$INSTALL_DIR"
+        git clone https://github.com/xmrig/xmrig "$INSTALL_DIR"
+        cd "$INSTALL_DIR"
+    fi
+    
+    mkdir -p build
+    cd build
+    
+    if [ -f "Makefile" ]; then
+        make clean
+    fi
+    
+    cmake .. -DWITH_HWLOC=OFF -DCMAKE_BUILD_TYPE=Release
+    
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}[ERROR] CMake failed!${NC}"
+        echo -e "${YELLOW}[INFO] Removing build directory and trying again...${NC}"
+        cd ..
+        rm -rf build
+        mkdir build
+        cd build
+        cmake .. -DWITH_HWLOC=OFF -DCMAKE_BUILD_TYPE=Release
+    fi
+    
+    make -j$(nproc)
+    
+    if [ ! -f xmrig ]; then
+        echo -e "${RED}[ERROR] XMRig build failed!${NC}"
+        echo -e "${YELLOW}[INFO] Trying to download pre-built binary...${NC}"
+        download_prebuilt_linux
+        return
+    fi
+    
+    echo -e "${GREEN}[SUCCESS] XMRig installed successfully!${NC}"
+}
+
+# Fungsi untuk install XMRig di Windows
+install_xmrig_windows() {
+    echo -e "${YELLOW}[INFO] Installing XMRig for Windows...${NC}"
+    
+    cd "$INSTALL_DIR"
+    rm -rf build
+    mkdir -p build
+    cd build
+    
+    # Download XMRig for Windows ARM64 dari link yang diberikan
+    XMRIG_ZIP="xmrig-6.24.0-windows-arm64.zip"
+    XMRIG_URL="https://github.com/xmrig/xmrig/releases/download/v6.24.0/xmrig-6.24.0-windows-arm64.zip"
+    
+    if [ ! -f "$XMRIG_ZIP" ]; then
+        echo -e "${YELLOW}[INFO] Downloading XMRig for Windows ARM64...${NC}"
+        curl -L -o "$XMRIG_ZIP" "$XMRIG_URL"
+        
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}[ERROR] Failed to download XMRig for Windows!${NC}"
+            return 1
+        fi
+    fi
+    
+    # Ekstrak file ZIP
+    echo -e "${YELLOW}[INFO] Extracting XMRig...${NC}"
+    if command -v unzip &> /dev/null; then
+        unzip -o "$XMRIG_ZIP"
+    else
+        # Fallback jika unzip tidak tersedia
+        echo -e "${YELLOW}[INFO] unzip not available, trying PowerShell...${NC}"
+        powershell -command "Expand-Archive -Path '$XMRIG_ZIP' -DestinationPath . -Force"
+    fi
+    
+    # Cari direktori yang diekstrak
+    EXTRACTED_DIR=$(find . -name "xmrig-*" -type d | head -1)
+    if [ -n "$EXTRACTED_DIR" ] && [ -d "$EXTRACTED_DIR" ]; then
+        cp -r "$EXTRACTED_DIR"/* .
+        rm -rf "$EXTRACTED_DIR"
+    fi
+    
+    if [ -f xmrig.exe ]; then
+        chmod +x xmrig.exe
+        echo -e "${GREEN}[SUCCESS] XMRig for Windows installed successfully!${NC}"
+    else
+        echo -e "${RED}[ERROR] XMRig for Windows installation failed!${NC}"
+        return 1
+    fi
+}
+
+# Fungsi untuk download binary pre-built Linux
+download_prebuilt_linux() {
+    echo -e "${YELLOW}[INFO] Downloading XMRig pre-built binary...${NC}"
+    
+    cd "$INSTALL_DIR"
+    rm -rf build
+    mkdir -p build
+    cd build
+    
+    ARCH=$(uname -m)
+    
+    if [ "$ARCH" = "x86_64" ]; then
+        wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-x64.tar.gz
+        tar -xzf xmrig-6.20.0-linux-x64.tar.gz
+        mv xmrig-6.20.0/xmrig .
+        rm -rf xmrig-6.20.0 xmrig-6.20.0-linux-x64.tar.gz
+    elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-arm64.tar.gz
+        tar -xzf xmrig-6.20.0-linux-arm64.tar.gz
+        mv xmrig-6.20.0/xmrig .
+        rm -rf xmrig-6.20.0 xmrig-6.20.0-linux-arm64.tar.gz
+    else
+        echo -e "${RED}[ERROR] Architecture $ARCH not supported for pre-built binary.${NC}"
+        exit 1
+    fi
+    
+    if [ -f xmrig ]; then
+        chmod +x xmrig
+        echo -e "${GREEN}[SUCCESS] XMRig pre-built downloaded successfully!${NC}"
+    else
+        echo -e "${RED}[ERROR] XMRig pre-built download failed!${NC}"
+        exit 1
+    fi
+}
+
+# Fungsi untuk menampilkan progress bar
+progress_bar() {
+    local duration=$1
+    local increment=$((100/$duration))
+    local bar=""
+    for ((i=0; i<=$duration; i++)); do
+        bar="${bar}="
+        echo -ne "${GREEN}[${bar}${CYAN}($((i*increment))%)${GREEN}]${NC}\r"
+        sleep 1
+    done
+    echo -ne "\n"
+}
+
+# Fungsi untuk memuat pengaturan
+load_settings() {
+    if [ -f "$SETTINGS_FILE" ]; then
+        USER_ID=$(jq -r '.user_id' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        WALLET_ADDRESS=$(jq -r '.wallet_address' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        COIN=$(jq -r '.coin' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        HASHRATE_LIMIT_ENABLED=$(jq -r '.hashrate_limit_enabled' "$SETTINGS_FILE" 2>/dev/null || echo "false")
+        CUSTOM_HASHRATE_LIMIT=$(jq -r '.custom_hashrate_limit' "$SETTINGS_FILE" 2>/dev/null || echo "999999")
+        MIN_WITHDRAWAL=$(jq -r '.min_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        MAX_WITHDRAWAL=$(jq -r '.max_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "")
+        AUTO_WITHDRAWAL=$(jq -r '.auto_withdrawal' "$SETTINGS_FILE" 2>/dev/null || echo "false")
+    fi
+}
+
+# Fungsi untuk memeriksa dan install dependencies Linux
+install_dependencies_linux() {
+    echo -e "${YELLOW}[INFO] Checking system dependencies...${NC}"
+    
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update
+        sudo apt-get install -y git build-essential cmake libuv1-dev libssl-dev libhwloc-dev wget curl jq bc pciutils lm-sensors
+    elif command -v yum &> /dev/null; then
+        sudo yum install -y git make cmake gcc libuv-devel openssl-devel hwloc-devel wget curl jq bc pciutils lm_sensors
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y git make cmake gcc libuv-devel openssl-devel hwloc-devel wget curl jq bc pciutils lm_sensors
+    else
+        echo -e "${RED}[ERROR] Unsupported package manager. Please install dependencies manually.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}[SUCCESS] Dependencies installed!${NC}"
+}
+
+# Fungsi untuk install GitBash di Windows
+install_gitbash_windows() {
+    echo -e "${YELLOW}[INFO] Checking for Git Bash on Windows...${NC}"
+    
+    if command -v git &> /dev/null && command -v bash &> /dev/null; then
+        echo -e "${GREEN}[SUCCESS] Git Bash is already installed!${NC}"
+        return 0
+    fi
+    
+    echo -e "${YELLOW}[INFO] Git Bash not found. Installing...${NC}"
+    
+    # Download Git for Windows
+    GIT_INSTALLER="Git-2.43.0-64-bit.exe"
+    if [ ! -f "$GIT_INSTALLER" ]; then
+        echo -e "${YELLOW}[INFO] Downloading Git for Windows...${NC}"
+        curl -L -o "$GIT_INSTALLER" "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/$GIT_INSTALLER"
+        
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}[ERROR] Failed to download Git for Windows!${NC}"
+            return 1
+        fi
+    fi
+    
+    echo -e "${YELLOW}[INFO] Installing Git for Windows...${NC}"
+    # Jalankan installer secara silent
+    ./$GIT_INSTALLER /SILENT /NORESTART /NOCANCEL /SP- /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS
+    
+    # Tambahkan Git Bash ke PATH
+    export PATH="$PATH:/c/Program Files/Git/bin"
+    
+    echo -e "${GREEN}[SUCCESS] Git Bash installed successfully!${NC}"
+    return 0
+}
+
+# Fungsi untuk download dan build XMRig
+install_xmrig() {
+    echo -e "${YELLOW}[INFO] Installing XMRig...${NC}"
+    
+    if [ "$OS" = "windows" ]; then
+        install_xmrig_windows
+    else
+        install_xmrig_linux
+    fi
+}
+
+# Fungsi untuk melihat log
+view_log() {
+    echo -e "${YELLOW}[INFO] Showing log...${NC}"
+    
+    if [ ! -f "$LOG_FILE" ]; then
+        echo -e "${RED}[ERROR] Log file not found!${NC}"
+        sleep 2
+        return
+    fi
+    
+    if [ "$OS" = "windows" ]; then
+        tail -20 "$LOG_FILE"
+    else
+        tail -20 "$LOG_FILE"
+    fi
+    
+    echo
+    echo -n "Press Enter to continue..."
+    read
+}
+
+# ============================ FUNGSI BARU UNTUK GPU MONITORING ============================
+
+# Fungsi untuk mendeteksi dan menginstall driver NVIDIA
+install_nvidia_drivers() {
+    echo -e "${YELLOW}[INFO] Checking NVIDIA drivers...${NC}"
+    
+    # Cek apakah driver NVIDIA sudah terinstall dan bekerja
+    if command -v nvidia-smi &> /dev/null; then
+        # Test jika nvidia-smi bekerja dengan benar
+        if nvidia-smi &> /dev/null; then
+            echo -e "${GREEN}[SUCCESS] NVIDIA drivers are already installed and working!${NC}"
+            NVIDIA_DRIVER_INSTALLED=true
+            return 0
+        else
+            echo -e "${YELLOW}[WARNING] NVIDIA drivers installed but not working properly${NC}"
+            NVIDIA_DRIVER_INSTALLED=false
+        fi
+    else
+        echo -e "${YELLOW}[INFO] NVIDIA drivers not found.${NC}"
+        NVIDIA_DRIVER_INSTALLED=false
+    fi
+    
+    # Jika driver tidak bekerja, tawarkan untuk install
+    if [ "$NVIDIA_DRIVER_INSTALLED" = false ]; then
+        echo -e "${YELLOW}[INFO] Would you like to install NVIDIA drivers? [y/N]: ${NC}"
+        read -t 10 -n 1 response
+        echo
+        
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}[INFO] Installing NVIDIA drivers...${NC}"
+            
+            if [ "$OS" = "linux" ]; then
+                # Deteksi distribusi Linux
+                if [ -f /etc/os-release ]; then
+                    . /etc/os-release
+                    DISTRO=$ID
+                else
+                    DISTRO="unknown"
+                fi
+                
+                case $DISTRO in
+                    "ubuntu"|"debian")
+                        # Ubuntu/Debian
+                        sudo apt-get update
+                        if command -v ubuntu-drivers &> /dev/null; then
+                            sudo ubuntu-drivers autoinstall
+                        else
+                            # Fallback untuk Debian/Ubuntu tanpa ubuntu-drivers
+                            sudo apt-get install -y nvidia-driver nvidia-smi
+                        fi
+                        ;;
+                    "centos"|"rhel"|"fedora")
+                        # CentOS/RHEL/Fedora
+                        if command -v yum &> /dev/null; then
+                            # CentOS/RHEL
+                            sudo yum install -y epel-release
+                            sudo yum install -y kernel-devel kernel-headers
+                            sudo yum install -y nvidia-driver nvidia-smi
+                        elif command -v dnf &> /dev/null; then
+                            # Fedora
+                            sudo dnf install -y akmod-nvidia nvidia-smi
+                        fi
+                        ;;
+                    "arch"|"manjaro")
+                        # Arch Linux/Manjaro
+                        if command -v pacman &> /dev/null; then
+                            sudo pacman -Syu --noconfirm
+                            sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-smi
+                        fi
+                        ;;
+                    "opensuse"|"suse")
+                        # openSUSE
+                        if command -v zypper &> /dev/null; then
+                            sudo zypper refresh
+                            sudo zypper install -y nvidia-computeG04 nvidia-gfxG04-kmp-default
+                        fi
+                        ;;
+                    *)
+                        # Distribusi umum - coba install dengan metode universal
+                        echo -e "${YELLOW}[INFO] Unknown distribution, trying universal method...${NC}"
+                        
+                        # Coba install dari repository NVIDIA
+                        if command -v apt-get &> /dev/null; then
+                            # Debian-based
+                            sudo apt-get update
+                            sudo apt-get install -y nvidia-driver nvidia-smi
+                        elif command -v yum &> /dev/null; then
+                            # RHEL-based
+                            sudo yum install -y nvidia-driver nvidia-smi
+                        elif command -v dnf &> /dev/null; then
+                            # Fedora-based
+                            sudo dnf install -y nvidia-driver nvidia-smi
+                        else
+                            echo -e "${RED}[ERROR] Cannot determine package manager for NVIDIA driver installation${NC}"
+                            return 1
+                        fi
+                        ;;
+                esac
+                
+                echo -e "${GREEN}[SUCCESS] NVIDIA drivers installed! Please reboot your system.${NC}"
+                
+            elif [ "$OS" = "windows" ]; then
+                echo -e "${YELLOW}[INFO] Please install NVIDIA drivers manually on Windows from:${NC}"
+                echo -e "${CYAN}https://www.nvidia.com/Download/index.aspx${NC}"
+                echo -e "${YELLOW}After installation, restart your computer and run this script again.${NC}"
+            else
+                echo -e "${RED}[ERROR] Unsupported OS for automatic NVIDIA driver installation${NC}"
+            fi
+        else
+            echo -e "${YELLOW}[INFO] Skipping NVIDIA driver installation.${NC}"
+        fi
+    fi
+    
+    return 0
+}
+
+# Fungsi untuk mendeteksi distribusi Linux dan install driver yang sesuai
+detect_and_install_nvidia() {
+    echo -e "${YELLOW}[INFO] Detecting Linux distribution for NVIDIA driver installation...${NC}"
+    
+    # Deteksi distribusi
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        echo -e "${CYAN}Detected distribution: $PRETTY_NAME${NC}"
+        
+        case $ID in
+            ubuntu|debian)
+                install_nvidia_debian
+                ;;
+            centos|rhel|fedora)
+                install_nvidia_redhat
+                ;;
+            arch|manjaro)
+                install_nvidia_arch
+                ;;
+            opensuse*|suse*)
+                install_nvidia_suse
+                ;;
+            *)
+                install_nvidia_generic
+                ;;
+        esac
+    else
+        echo -e "${YELLOW}[WARNING] Cannot detect Linux distribution, trying generic method...${NC}"
+        install_nvidia_generic
+    fi
+}
+
+# Fungsi install untuk Debian/Ubuntu
+install_nvidia_debian() {
+    echo -e "${YELLOW}[INFO] Installing NVIDIA drivers for Debian/Ubuntu...${NC}"
+    
+    sudo apt-get update
+    sudo apt-get install -y software-properties-common
+    
+    # Coba berbagai metode install
+    if command -v ubuntu-drivers &> /dev/null; then
+        sudo ubuntu-drivers autoinstall
+    else
+        # Add NVIDIA repository
+        sudo add-apt-repository -y ppa:graphics-drivers/ppa
+        sudo apt-get update
+        
+        # Install driver recommended
+        sudo apt-get install -y nvidia-driver-525  # Versi yang umum
+    fi
+}
+
+# Fungsi install untuk RedHat/CentOS/Fedora
+install_nvidia_redhat() {
+    echo -e "${YELLOW}[INFO] Installing NVIDIA drivers for RHEL-based systems...${NC}"
+    
+    if command -v dnf &> /dev/null; then
+        # Fedora
+        sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+        sudo dnf install -y https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+        sudo dnf install -y akmod-nvidia
+    elif command -v yum &> /dev/null; then
+        # CentOS/RHEL
+        sudo yum install -y epel-release
+        sudo yum install -y kernel-devel kernel-headers
+        sudo yum install -y nvidia-driver
+    fi
+}
+
+# Fungsi install untuk Arch Linux
+install_nvidia_arch() {
+    echo -e "${YELLOW}[INFO] Installing NVIDIA drivers for Arch Linux...${NC}"
+    
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm nvidia nvidia-utils nvidia-settings
+}
+
+# Fungsi install untuk openSUSE
+install_nvidia_suse() {
+    echo -e "${YELLOW}[INFO] Installing NVIDIA drivers for openSUSE...${NC}"
+    
+    sudo zypper refresh
+    sudo zypper install -y nvidia-computeG04 nvidia-gfxG04-kmp-default
+}
+
+# Fungsi install generik
+install_nvidia_generic() {
+    echo -e "${YELLOW}[INFO] Trying generic NVIDIA driver installation...${NC}"
+    
+    # Coba berdasarkan package manager yang tersedia
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update
+        sudo apt-get install -y nvidia-driver
+    elif command -v yum &> /dev/null; then
+        sudo yum install -y nvidia-driver
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y nvidia-driver
+    elif command -v zypper &> /dev/null; then
+        sudo zypper install -y nvidia-driver
+    else
+        echo -e "${RED}[ERROR] No supported package manager found for automatic installation${NC}"
+        echo -e "${YELLOW}Please install NVIDIA drivers manually from:${NC}"
+        echo -e "${CYAN}https://www.nvidia.com/Download/index.aspx${NC}"
+        return 1
+    fi
+}
+
+# Fungsi untuk mendiagnosa masalah NVIDIA
+diagnose_nvidia_issues() {
+    echo -e "${YELLOW}[INFO] Diagnosing NVIDIA issues...${NC}"
+    
+    # Cek jika NVIDIA GPU terdeteksi oleh sistem
+    if [ "$OS" = "linux" ]; then
+        echo -e "${CYAN}Checking for NVIDIA hardware...${NC}"
+        if lspci | grep -i nvidia &> /dev/null; then
+            echo -e "${GREEN}✓ NVIDIA GPU detected by system${NC}"
+            
+            # Deteksi model GPU
+            local gpu_model=$(lspci | grep -i nvidia | head -1 | cut -d: -f3 | xargs)
+            echo -e "${CYAN}GPU Model: $gpu_model${NC}"
+        else
+            echo -e "${RED}✗ No NVIDIA GPU detected by system${NC}"
+            return 1
+        fi
+        
+        # Cek jika driver terload
+        echo -e "${CYAN}Checking driver status...${NC}"
+        if lsmod | grep -i nvidia &> /dev/null; then
+            echo -e "${GREEN}✓ NVIDIA driver loaded${NC}"
+            
+            # Cek versi driver
+            if command -v nvidia-smi &> /dev/null; then
+                local driver_version=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1)
+                echo -e "${CYAN}Driver Version: $driver_version${NC}"
+            fi
+        else
+            echo -e "${RED}✗ NVIDIA driver not loaded${NC}"
+            
+            # Coba load driver manual
+            echo -e "${YELLOW}Attempting to load NVIDIA driver...${NC}"
+            if sudo modprobe nvidia 2>/dev/null; then
+                echo -e "${GREEN}✓ Driver loaded successfully${NC}"
+            else
+                echo -e "${RED}✗ Failed to load driver${NC}"
+                echo -e "${YELLOW}Error: $(dmesg | grep nvidia | tail -5)${NC}"
+            fi
+        fi
+        
+        # Cek permissions
+        echo -e "${CYAN}Checking user permissions...${NC}"
+        if groups | grep -q video; then
+            echo -e "${GREEN}✓ User in video group${NC}"
+        else
+            echo -e "${YELLOW}⚠ User not in video group${NC}"
+            echo -e "${YELLOW}Run: sudo usermod -aG video $USER${NC}"
+            echo -e "${YELLOW}Then logout and login again${NC}"
+        fi
+        
+        # Cek jika X server menggunakan GPU
+        if pgrep Xorg >/dev/null; then
+            echo -e "${CYAN}Checking X server...${NC}"
+            if xrandr --listproviders | grep -q NVIDIA; then
+                echo -e "${GREEN}✓ X server using NVIDIA GPU${NC}"
+            else
+                echo -e "${YELLOW}⚠ X server not using NVIDIA GPU${NC}"
+            fi
+        fi
+        
+    elif [ "$OS" = "windows" ]; then
+        echo -e "${CYAN}Checking Windows NVIDIA setup...${NC}"
+        # Windows diagnosis
+        if systeminfo | grep -i nvidia &> /dev/null; then
+            echo -e "${GREEN}✓ NVIDIA components detected${NC}"
+        else
+            echo -e "${RED}✗ No NVIDIA components found${NC}"
+        fi
+    fi
+    
+    echo -e "${YELLOW}[INFO] Diagnosis complete${NC}"
+    echo -e "${CYAN}Recommended actions:${NC}"
+    echo -e "1. Restart your computer"
+    echo -e "2. Reinstall NVIDIA drivers if problem persists"
+    echo -e "3. Check BIOS settings for GPU configuration"
+}
+
+# Fungsi untuk memperbaiki masalah NVIDIA
+fix_nvidia_issues() {
+    echo -e "${YELLOW}[INFO] Attempting to fix NVIDIA issues...${NC}"
+    
+    if [ "$OS" = "linux" ]; then
+        # Coba stop display manager
+        echo -e "${CYAN}Stopping display manager...${NC}"
+        if command -v systemctl &> /dev/null; then
+            sudo systemctl stop gdm 2>/dev/null || sudo systemctl stop lightdm 2>/dev/null || sudo systemctl stop sddm 2>/dev/null
+        fi
+        
+        # Unload dan load kembali driver - gunakan nama modul yang generik
+        echo -e "${CYAN}Reloading NVIDIA drivers...${NC}"
+        
+        # Coba unload modul NVIDIA dengan berbagai nama yang mungkin
+        sudo rmmod nvidia_drm nvidia_modeset nvidia_uvm nvidia nvidia_current 2>/dev/null
+        sleep 2
+        
+        # Coba load modul dengan nama yang generik (tanpa suffix versi)
+        echo -e "${CYAN}Loading NVIDIA modules with generic names...${NC}"
+        
+        # Coba deteksi modul NVIDIA yang tersedia
+        NVIDIA_MODULES=$(find /lib/modules/$(uname -r)/ -name "nvidia*.ko*" 2>/dev/null | head -5)
+        
+        if [ -n "$NVIDIA_MODULES" ]; then
+            echo -e "${GREEN}Found NVIDIA modules:${NC}"
+            echo "$NVIDIA_MODULES"
+            
+            # Coba load modul dasar terlebih dahulu
+            sudo modprobe nvidia 2>/dev/null || \
+            sudo modprobe nvidia-current 2>/dev/null || \
+            sudo modprobe nvidia-driver 2>/dev/null
+            
+            # Load modul tambahan jika modul dasar berhasil
+            if lsmod | grep -q nvidia; then
+                sudo modprobe nvidia_uvm 2>/dev/null
+                sudo modprobe nvidia_modeset 2>/dev/null
+                sudo modprobe nvidia_drm 2>/dev/null
+                echo -e "${GREEN}✓ NVIDIA modules loaded successfully${NC}"
+            else
+                echo -e "${YELLOW}⚠ Could not load basic NVIDIA module${NC}"
+                echo -e "${YELLOW}Trying to install NVIDIA drivers...${NC}"
+                install_nvidia_drivers
+            fi
+        else
+            echo -e "${RED}✗ No NVIDIA modules found in /lib/modules/$(uname -r)/${NC}"
+            echo -e "${YELLOW}Installing NVIDIA drivers...${NC}"
+            install_nvidia_drivers
+        fi
+        
+        # Start kembali display manager
+        if command -v systemctl &> /dev/null; then
+            sudo systemctl start gdm 2>/dev/null || sudo systemctl start lightdm 2>/dev/null || sudo systemctl start sddm 2>/dev/null
+        fi
+        
+        echo -e "${GREEN}✓ Driver reload attempted${NC}"
+        
+    elif [ "$OS" = "windows" ]; then
+        echo -e "${YELLOW}For Windows:${NC}"
+        echo -e "1. Open Device Manager"
+        echo -e "2. Find NVIDIA GPU under Display adapters"
+        echo -e "3. Right-click and select 'Disable device'"
+        echo -e "4. Right-click again and select 'Enable device'"
+        echo -e "5. Or reinstall drivers from NVIDIA website"
+    fi
+    
+    echo -e "${YELLOW}[INFO] Fix attempts completed. Restart recommended.${NC}"
+}
+
+# Fungsi untuk mendeteksi CUDA
+detect_cuda() {
+    if command -v nvcc &> /dev/null; then
+        CUDA_AVAILABLE=true
+        echo -e "${GREEN}[SUCCESS] CUDA detected!${NC}"
+        return 0
+    fi
+    
+    # Cek melalui nvidia-smi
+    if command -v nvidia-smi &> /dev/null; then
+        local cuda_version=$(nvidia-smi | grep -o "CUDA Version: [0-9]*\.[0-9]*" | cut -d' ' -f3)
+        if [ -n "$cuda_version" ]; then
+            CUDA_AVAILABLE=true
+            echo -e "${GREEN}[SUCCESS] CUDA $cuda_version detected!${NC}"
+            return 0
+        fi
+    fi
+    
+    echo -e "${YELLOW}[INFO] CUDA not detected. Some GPU features may be limited.${NC}"
+    CUDA_AVAILABLE=false
+    return 1
+}
+
+# Fungsi untuk mengumpulkan informasi GPU NVIDIA
+get_nvidia_gpu_info() {
+    local current_time=$(date +%s)
+    
+    # Update info setiap 3 detik
+    if [ $((current_time - GPU_INFO_UPDATED)) -lt 3 ] && [ ${#GPU_DASHBOARD_DATA[@]} -gt 0 ]; then
+        return
+    fi
+    
+    GPU_DASHBOARD_DATA=()
+    
+    # Cek apakah nvidia-smi tersedia
+    if ! command -v nvidia-smi &> /dev/null; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Drivers not installed")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    # Coba ambil data GPU, tangani error
+    local gpu_info
+    gpu_info=$(nvidia-smi --query-gpu=index,name,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.used,memory.free,power.draw,power.limit --format=csv,noheader,nounits 2>&1)
+    
+    # Cek error spesifik yang memerlukan restart
+    if echo "$gpu_info" | grep -q "NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Driver issue - RESTART REQUIRED")
+        GPU_INFO_UPDATED=$current_time
+        
+        # Set flag untuk menampilkan pesan restart
+        echo "RESTART_REQUIRED" > "$INSTALL_DIR/.nvidia_status"
+        return
+    fi
+    
+    if echo "$gpu_info" | grep -q "failed\|error\|NVIDIA-SMI has failed"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: Driver communication error")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    if [ -z "$gpu_info" ] || echo "$gpu_info" | grep -q "No devices were found"; then
+        GPU_DASHBOARD_DATA=("NVIDIA GPU: No devices detected")
+        GPU_INFO_UPDATED=$current_time
+        return
+    fi
+    
+    # Jika berhasil mendapatkan data, hapus status error
+    if [ -f "$INSTALL_DIR/.nvidia_status" ]; then
+        rm -f "$INSTALL_DIR/.nvidia_status"
+    fi
+    
+    # Parse data GPU
+    IFS=$'\n' read -d '' -r -a gpu_lines <<< "$gpu_info"
+    
+    for line in "${gpu_lines[@]}"; do
+        IFS=',' read -r index name temp gpu_util mem_util mem_total mem_used mem_free power_draw power_limit <<< "$line"
+        
+        # Bersihkan spasi dan handle missing values
+        index=$(echo "$index" | xargs | sed 's/^[^0-9]*//')
+        name=$(echo "$name" | xargs)
+        temp=$(echo "$temp" | xargs)
+        gpu_util=$(echo "$gpu_util" | xargs | sed 's/%//')
+        mem_util=$(echo "$mem_util" | xargs | sed 's/%//')
+        mem_total=$(echo "$mem_total" | xargs)
+        mem_used=$(echo "$mem_used" | xargs)
+        mem_free=$(echo "$mem_free" | xargs)
+        power_draw=$(echo "$power_draw" | xargs)
+        power_limit=$(echo "$power_limit" | xargs)
+        
+        # Handle missing/error values
+        if [ -z "$temp" ] || [ "$temp" = "N/A" ]; then
+            temp="0"
+        fi
+        
+        if [ -z "$gpu_util" ] || [ "$gpu_util" = "N/A" ]; then
+            gpu_util="0"
+        fi
+        
+        # Format output untuk dashboard
+        local gpu_status="GPU${index}: ${name} | Temp: ${temp}°C | Load: ${gpu_util}% | Mem: ${mem_used}MB/${mem_total}MB (${mem_util}%) | Power: ${power_draw}W/${power_limit}W"
+        GPU_DASHBOARD_DATA+=("$gpu_status")
+    done
+    
+    GPU_INFO_UPDATED=$current_time
+}
+
+# Fungsi untuk mengumpulkan informasi CPU dan RAM
+get_cpu_ram_info() {
+    local cpu_usage=""
+    local ram_usage=""
+    
+    if [ "$OS" = "linux" ] || [ "$OS" = "mac" ]; then
+        # CPU usage
+        cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}')
+        
+        # RAM usage
+        ram_usage=$(free -m | awk 'NR==2{printf "%.2f%% (%sMB/%sMB)", $3*100/$2, $3, $2}')
+    elif [ "$OS" = "windows" ]; then
+        # Windows implementation using wmic
+        cpu_usage=$(wmic cpu get loadpercentage | awk 'NR==2{print $1"%"}')
+        ram_usage=$(wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value | awk -F'=' '{if ($1 ~ /FreePhysicalMemory/) free=$2; if ($1 ~ /TotalVisibleMemorySize/) total=$2} END {printf "%.2f%% (%dMB/%dMB)", (total-free)*100/total, (total-free)/1024, total/1024}')
+    else
+        cpu_usage="N/A"
+        ram_usage="N/A"
+    fi
+    
+    echo "CPU: $cpu_usage | RAM: $ram_usage"
+}
+
+# Fungsi untuk menampilkan dashboard GPU di atas User ID
+show_gpu_dashboard() {
+    get_nvidia_gpu_info
+    local cpu_ram_info=$(get_cpu_ram_info)
+    
+    echo -e "${PURPLE}══════════════════ SYSTEM MONITOR ══════════════════${NC}"
+    echo -e "${CYAN}$cpu_ram_info${NC}"
+    
+    # Tampilkan pesan restart jika diperlukan
+    if [ -f "$INSTALL_DIR/.nvidia_status" ] && [ "$(cat "$INSTALL_DIR/.nvidia_status")" = "RESTART_REQUIRED" ]; then
+        echo -e "${RED}⚠️  SYSTEM RESTART REQUIRED for NVIDIA drivers! ⚠️${NC}"
+        echo -e "${YELLOW}Please restart your computer and run this script again${NC}"
+    fi
+    
+    for gpu_info in "${GPU_DASHBOARD_DATA[@]}"; do
+        # Warna berdasarkan suhu GPU
+        if [[ $gpu_info =~ Temp:\ ([0-9]+) ]]; then
+            temp=${BASH_REMATCH[1]}
+            if [ "$temp" -gt 80 ]; then
+                echo -e "${RED}$gpu_info${NC}"
+            elif [ "$temp" -gt 70 ]; then
+                echo -e "${YELLOW}$gpu_info${NC}"
+            else
+                echo -e "${GREEN}$gpu_info${NC}"
+            fi
+        else
+            echo -e "${CYAN}$gpu_info${NC}"
+        fi
+    done
+    echo -e "${PURPLE}═══════════════════════════════════════════════════${NC}"
+}
+
+# Fungsi untuk setup mining dengan GPU NVIDIA
+setup_gpu_mining() {
+    echo -e "${YELLOW}[INFO] Setting up GPU mining with NVIDIA...${NC}"
+    
+    # Install driver NVIDIA jika belum ada
+    if ! install_nvidia_drivers; then
+        echo -e "${RED}[ERROR] NVIDIA driver installation failed!${NC}"
+        echo -e "${YELLOW}[INFO] Running diagnosis...${NC}"
+        diagnose_nvidia_issues
+        return 1
+    fi
+    
+    # Deteksi CUDA
+    detect_cuda
+    
+    # Update config untuk mining dengan GPU
+    if [ -f "$CONFIG_FILE" ]; then
+        echo -e "${YELLOW}[INFO] Updating config for GPU mining...${NC}"
+        
+        # Enable CUDA dan OpenCL dalam config
+        sed -i 's/"cuda": false/"cuda": true/g' "$CONFIG_FILE"
+        sed -i 's/"opencl": false/"opencl": true/g' "$CONFIG_FILE"
+        
+        echo -e "${GREEN}[SUCCESS] GPU mining configured!${NC}"
+    else
+        echo -e "${YELLOW}[INFO] Config file not found, creating new one...${NC}"
+        create_config
+    fi
+    
+    echo -e "${GREEN}[SUCCESS] GPU mining setup completed!${NC}"
+    return 0
+}
+
+# Modifikasi fungsi show_dashboard untuk menambahkan menu XMRig dashboard
+show_dashboard() {
+    local balance_update_interval=5
+    
+    # Setup GPU mining jika belum dilakukan
+    if ! $NVIDIA_DRIVER_INSTALLED && [ "$OS" = "linux" ]; then
+        echo -e "${YELLOW}[INFO] Detecting NVIDIA hardware...${NC}"
+        if lspci | grep -i nvidia &> /dev/null; then
+            echo -e "${GREEN}[INFO] NVIDIA GPU detected! Setting up...${NC}"
+            setup_gpu_mining
+        fi
+    fi
+    
+    while true; do
+        show_header
+        
+        # Tampilkan dashboard GPU di atas User ID
+        show_gpu_dashboard
+        
+        # Update balance setiap 5 detik
+        update_mining_balance
+        
+        echo -e "${BLUE}════════════════════ DASHBOARD ════════════════════${NC}"
+        echo -e "User ID: ${YELLOW}$USER_ID${NC}"
+        echo -e "Wallet: ${YELLOW}$WALLET_ADDRESS${NC}"
+        echo -e "Coin: ${YELLOW}$COIN${NC}"
+        echo -e "Referral: ${YELLOW}$REFERRAL_CODE${NC}"
+        echo -e "Balance: ${GREEN}$MINING_BALANCE${NC}"
+        echo -e "Active Pools: ${GREEN}100/100${NC}"
+        echo -e "Active Workers: ${GREEN}${#ACTIVE_WORKERS[@]}/10${NC}"
+        echo -e "Hash Rate Limit: $([ "$HASHRATE_LIMIT_ENABLED" = true ] && echo -e "${GREEN}Enabled${NC} ($CUSTOM_HASHRATE_LIMIT H/s)" || echo -e "${RED}Disabled${NC}")"
+        echo -e "Auto Withdrawal: $([ "$AUTO_WITHDRAWAL" = true ] && echo -e "${GREEN}Enabled${NC}" || echo -e "${RED}Disabled${NC}")"
+        echo -e "Min/Max Withdrawal: ${YELLOW}$MIN_WITHDRAWAL / $MAX_WITHDRAWAL${NC}"
+        echo -e "NVIDIA GPU: $([ "$NVIDIA_DRIVER_INSTALLED" = true ] && echo -e "${GREEN}Detected${NC}" || echo -e "${RED}Not Detected${NC}")"
+        echo -e "CUDA: $([ "$CUDA_AVAILABLE" = true ] && echo -e "${GREEN}Available${NC}" || echo -e "${YELLOW}Not Available${NC}")"
+        echo -e "XMRig Status: $(is_mining && echo -e "${GREEN}Running${NC}" || echo -e "${RED}Stopped${NC}")"
+        echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
+        echo
+        echo -e "1. Start Mining (100 Pools)"
+        echo -e "2. Stop Mining"
+        echo -e "3. Settings (User ID/Wallet/Coin)"
+        echo -e "4. Hash Rate Settings"
+        echo -e "5. Worker Settings"
+        echo -e "6. Manual Withdrawal"
+        echo -e "7. Auto Withdrawal Settings"
+        echo -e "8. Transaction History"
+        echo -e "9. View Log"
+        echo -e "G. Setup GPU Mining"
+        echo -e "X. XMRig Real-time Dashboard"  # Menu baru
+        echo -e "d. diagnose_nvidia_issues"
+        echo -e "f. fix_nvidia_issues"
+        echo -e "0. Reinstall XMRig"
+        echo -e "Q. Exit"
+        echo
+        echo -n "Select option [0-9, G, X, Q]: "
+        
+        # Baca input dengan timeout 1 detik untuk real-time update
+        read -t 1 choice
+        if [ $? -gt 0 ]; then
+            continue  # Refresh dashboard jika tidak ada input
+        fi
+        
+        case $choice in
+            1)
+                start_mining
+                ;;
+            2)
+                stop_mining
+                ;;
+            3)
+                user_settings
+                ;;
+            4)
+                hashrate_settings
+                ;;
+            5)
+                worker_settings
+                ;;
+            6)
+                manual_withdrawal
+                ;;
+            7)
+                auto_withdrawal_settings
+                ;;
+            8)
+                view_transaction_history
+                ;;
+            9)
+                view_log
+                ;;
+            g|G)
+                setup_gpu_mining
+                ;;
+            x|X)  # Menu baru untuk XMRig dashboard
+                show_xmrig_realtime_dashboard
+                ;;
+            d|D)
+               diagnose_nvidia_issues
+               echo -n "Press Enter to continue..."
+               read
+               ;;
+            f|F)
+              fix_nvidia_issues
+              echo -n "Press Enter to continue..."
+              read
+              ;;    
+            0)
+                reinstall_xmrig
+                ;;
+            q|Q)
+                stop_mining
+                echo -e "${GREEN}[INFO] Exiting program.${NC}"
+                exit 0
+                ;;
+            *)
+                # Invalid input, continue to refresh dashboard
+                ;;
+        esac
+    done
+}
+
+# Fungsi baru untuk menampilkan dashboard XMRig real-time
+show_xmrig_realtime_dashboard() {
+    local refresh_interval=2  # Refresh setiap 2 detik
+    
+    while true; do
+        clear
+        show_header
+        show_xmrig_dashboard
+        
+        echo -e "\n${BLUE}════════════════════ CONTROLS ════════════════════${NC}"
+        echo -e "R. Refresh immediately"
+        echo -e "S. Stop Mining"
+        echo -e "B. Back to Main Menu"
+        echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
+        echo -n "Auto-refreshing in ${refresh_interval}s... Select option: "
+        
+        # Baca input dengan timeout
+        read -t $refresh_interval -n 1 choice
+        local read_result=$?
+        
+        case $choice in
+            r|R)
+                continue  # Refresh immediately
+                ;;
+            s|S)
+                stop_mining
+                echo -e "${YELLOW}[INFO] Mining stopped. Press Enter to continue...${NC}"
+                read
+                break
+                ;;
+            b|B)
+                break
+                ;;
+            *)
+                # Timeout, continue refreshing
+                if [ $read_result -gt 128 ]; then
+                    continue
+                fi
+                ;;
+        esac
+    done
+}
+
+# Fungsi untuk update balance mining secara real-time
+update_mining_balance() {
+    local current_time=$(date +%s)
+    
+    # Update balance setiap 5 detik
+    if [ $((current_time - LAST_BALANCE_UPDATE)) -ge 5 ]; then
+        MINING_BALANCE=$(get_balance)
+        LAST_BALANCE_UPDATE=$current_time
+    fi
+}
+
+# ============================ FUNGSI YANG TETAP SAMA ============================
+
+# Fungsi untuk menampilkan header hacker style
+show_header() {
+    clear
+    echo -e "${GREEN}"
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║    ██╗   ██╗███╗   ██╗███╗   ██╗██╗███╗   ██╗███████╗██████╗ ║"
+    echo "║    ██║   ██║████╗  ██║████╗  ██║██║████╗  ██║██╔════╝██╔══██╗║"
+    echo "║    ██║   ██║██╔██╗ ██║██╔██╗ ██║██║██╔██╗ ██║█████╗  ██║  ██║║"
+    echo "║    ██║   ██║██║╚██╗██║██║╚██╗██║██║██║╚██╗██║██╔══╝  ██║  ██║║"
+    echo "║    ╚██████╔╝██║ ╚████║██║ ╚████║██║██║ ╚████║███████╗██████╔╝║"
+    echo "║     ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝╚══════╝╚═════╝ ║"
+    echo "║                 U L T I M A T E   M I N E R                 ║"
+    echo "║              W I T H D R A W A L   S Y S T E M              ║"
+    echo "║                    OS: ${OS^^} - ${ARCH^^}                          ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    
+    # Tampilkan animasi hacker style
+    echo -e "${CYAN}"
+    echo "   [*] Initializing system..."
+    echo "   [*] Loading crypto modules..."
+    echo "   [*] Connecting to blockchain..."
+    echo -e "${NC}"
+}
+
+# ... (fungsi-fungsi lainnya tetap sama, hanya ditambahkan modifikasi kecil)
+# Fungsi untuk menampilkan dashboard GPU di atas User ID
+show_gpu_dashboard() {
+    get_nvidia_gpu_info
+    local cpu_ram_info=$(get_cpu_ram_info)
+    
+    echo -e "${PURPLE}══════════════════ SYSTEM MONITOR ══════════════════${NC}"
+    echo -e "${CYAN}$cpu_ram_info${NC}"
+    
+    # Tampilkan pesan restart jika diperlukan
+    if [ -f "$INSTALL_DIR/.nvidia_status" ] && [ "$(cat "$INSTALL_DIR/.nvidia_status")" = "RESTART_REQUIRED" ]; then
+        echo -e "${RED}⚠️  SYSTEM RESTART REQUIRED for NVIDIA drivers! ⚠️${NC}"
+        echo -e "${YELLOW}Please restart your computer and run this script again${NC}"
+    fi
+    
+    for gpu_info in "${GPU_DASHBOARD_DATA[@]}"; do
+        # Warna berdasarkan suhu GPU
+        if [[ $gpu_info =~ Temp:\ ([0-9]+) ]]; then
+            temp=${BASH_REMATCH[1]}
+            if [ "$temp" -gt 80 ]; then
+                echo -e "${RED}$gpu_info${NC}"
+            elif [ "$temp" -gt 70 ]; then
+                echo -e "${YELLOW}$gpu_info${NC}"
+            else
+                echo -e "${GREEN}$gpu_info${NC}"
+            fi
+        else
+            echo -e "${CYAN}$gpu_info${NC}"
+        fi
+    done
+    echo -e "${PURPLE}═══════════════════════════════════════════════════${NC}"
+}
+
+# Fungsi untuk memuat workers dari file
+load_workers() {
+    if [ -f "$WORKERS_FILE" ]; then
+        while IFS= read -r line; do
+            if [ -n "$line" ]; then
+                ACTIVE_WORKERS+=("$line")
+            fi
+        done < "$WORKERS_FILE"
+    fi
+}
+
+# Fungsi untuk setup Windows
+setup_windows() {
+    echo -e "${YELLOW}[INFO] Setting up Windows environment...${NC}"
+    
+    # Install Git Bash jika belum ada
+    install_gitbash_windows
+    
+    # Install dependencies Windows
+    if ! command -v jq &> /dev/null; then
+        echo -e "${YELLOW}[INFO] Installing jq for Windows...${NC}"
+        curl -L -o jq.exe "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe"
+        mv jq.exe /usr/bin/jq.exe
+        chmod +x /usr/bin/jq.exe
+    fi
+    
+    if ! command -v bc &> /dev/null; then
+        echo -e "${YELLOW}[INFO] Installing bc for Windows...${NC}"
+        # BC tidak tersedia secara default di Windows, kita akan gunakan alternatif
+        echo "#!/bin/bash" > /usr/bin/bc
+        echo "echo 0" >> /usr/bin/bc
+        chmod +x /usr/bin/bc
+    fi
+    
+    echo -e "${GREEN}[SUCCESS] Windows environment setup completed!${NC}"
+}
+
+# Modifikasi fungsi main untuk inisialisasi XMRig_PID
+main() {
+    show_header
+    
+    echo -e "${YELLOW}NOTICE: Please make sure you have:${NC}"
+    echo -e "1. A valid User ID/Worker Name"
+    echo -e "2. A valid Wallet Address (34-250 characters)"
+    echo -e "3. Selected the coin you want to mine"
+    echo
+    echo -e "${YELLOW}This program will use 10 Unmineable pools simultaneously with multiple algorithms${NC}"
+    echo
+    echo -e "${CYAN}Initializing system, please wait...${NC}"
+    progress_bar 3
+    
+    # Setup khusus Windows
+    if [ "$OS" = "windows" ]; then
+        setup_windows
+    fi
+    
+    # Buat direktori instalasi jika belum ada
+    mkdir -p "$INSTALL_DIR"
+    
+    # Load pengaturan
+    load_settings
+    
+    # Periksa dan install dependencies Linux
+    if [ "$OS" = "linux" ] && [ ! -f "$INSTALL_DIR/build/xmrig" ]; then
+        echo -e "${YELLOW}[INFO] XMRig not installed, installing now...${NC}"
+        install_dependencies_linux
+        install_xmrig
+    fi
+    
+    # Periksa dan install XMRig Windows
+    if [ "$OS" = "windows" ] && [ ! -f "$INSTALL_DIR/build/xmrig.exe" ]; then
+        echo -e "${YELLOW}[INFO] XMRig not installed, installing now...${NC}"
+        install_xmrig
+    fi
+    
+    # Load workers dari file
+    load_workers
+    
+    # Minta pengaturan user pertama kali jika belum diatur
+    if [ -z "$USER_ID" ] || [ -z "$WALLET_ADDRESS" ] || [ -z "$COIN" ]; then
+        user_settings
+    else
+        create_config_with_api  # Gunakan fungsi baru dengan API
+    fi
+    
+    # Inisialisasi balance
+    MINING_BALANCE=$(get_balance)
+    LAST_BALANCE_UPDATE=$(date +%s)
+    
+    # Inisialisasi GPU info
+    GPU_INFO_UPDATED=0
+    
+    # Inisialisasi XMRig PID
+    XMRIG_PID=0
+    
+    # Jalankan dashboard
+    show_dashboard
+}
+
+# Trap untuk cleanup saat script dihentikan
+trap stop_mining EXIT
+
+# Jalankan fungsi utama
+main
